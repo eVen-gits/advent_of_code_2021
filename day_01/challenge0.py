@@ -1,11 +1,10 @@
 
 def pt_0(data):
-    descends = sum(
+    return sum(
         1 for
         i in range(1, len(data))
         if data[i] > data[i-1]
     )
-    return descends
 
 def pt_1(data):
     return sum(
