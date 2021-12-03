@@ -1,3 +1,25 @@
+import sys
+import time
+
+#   DECORATORS
+def timeit(method):
+    def timed(*args, **kw):
+        sys.stdout.write('\rt({}) ...'.format(method.__name__))
+        sys.stdout.flush()
+
+        ts = time.time()
+        result = method(*args, **kw)
+        te = time.time()
+        if 'log_time' in kw:
+            name = kw.get('log_name', method.__name__.upper())
+            kw['log_time'][name] = int((te - ts) * 1000)
+        else:
+            #print('%r  %2.2f ms' % (method.__name__, (te - ts) * 1000))
+            sys.stdout.write('\rt({}) = {:.2f} ms\n'.format(method.__name__, (te - ts) * 1000))
+            sys.stdout.flush()
+        return result
+    return timed
+
 def get_most_common_bit(data, blen, bit_pos, reverse=False):
     # number of binary inputs
     n_inputs = len(data)
@@ -25,6 +47,7 @@ def pt_0(data, blen):
 
     return gamma, epsilon
 
+@timeit
 def pt_1(data, blen):
     # number of binary inputs
     maxint = int('1' * blen, 2)
