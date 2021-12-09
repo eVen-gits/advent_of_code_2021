@@ -70,16 +70,25 @@ class Decoder:
 
     def decode_line(self, line):
         self.reset()
-        for i, encoded_digit in enumerate(line):
-            self.direct_map(encoded_digit)
+        for i, digit in enumerate(line):
+            if isinstance(digit, str):
+                if len(digit) in self.DIRECT_LEN_MAPPING.keys():
+                    decoded = self.bind(digit)
+                    line[i] = decoded
 
-        for i, encoded_digit in enumerate(line):
-            flags = self.calculate_flags(encoded_digit)
-            if flags not in self.decoded.keys():
-                if not self.smart_map(encoded_digit):
-                    print('Could not decode {}'.format(encoded_digit))
+        for i, digit in enumerate(line):
+            if isinstance(digit, str):
+                flags = self.calculate_flags(digit)
+                if flags not in self.decoded.keys():
+                    decoded = self.bind(digit)
+                    if decoded is not None:
+                        line[i] = decoded
+                    else:
+                        print('Could not decode {}'.format(digit))
+                else:
+                    line[i] = self.decoded[flags].value
 
-        return int(''.join(map(str, [self.decode(enc) for enc in line[-4:]])))
+        return int(''.join(map(str, line[-4:])))
 
     def calculate_flags(self, value: str) -> int:
         flags = 0
@@ -93,24 +102,21 @@ class Decoder:
             digit.flags = self.calculate_flags(encoded)
             self.decoded[digit.flags] = digit
 
-    def direct_map(self, encoded: str) -> bool:
+    def bind(self, encoded: str) -> bool:
         strlen = len(encoded)
         if len(encoded) in self.DIRECT_LEN_MAPPING.keys():
             self.save_mapping(self.DIRECT_LEN_MAPPING[strlen], encoded)
-            return True
-        return False
-
-    def smart_map(self, encoded: str) -> bool:
-        # calculate flags from encoded string
-        flags = self.calculate_flags(encoded)
-        xor_sum = sum([sum_bits(self.encoded[x].flags ^ flags) for x in [1, 4, 7]])
-
-        try:
-            value = self.IMPLICIT_MAPPING[xor_sum]
-        except KeyError:
-            return False
-        self.save_mapping(value, encoded)
-        return True
+            return self.DIRECT_LEN_MAPPING[strlen]
+        else:
+            flags = self.calculate_flags(encoded)
+            xor_sum = sum([sum_bits(self.encoded[x].flags ^ flags) for x in [1, 4, 7]])
+            try:
+                value = self.IMPLICIT_MAPPING[xor_sum]
+            except KeyError:
+                return False
+            self.save_mapping(value, encoded)
+            return value
+        return None
 
 DIGITS = {
     0: Digit(
@@ -176,7 +182,8 @@ def pt_1(data):
 
 def pt_2(data):
     decoder = Decoder()
-    return sum([decoder.decode_line(d) for d in data])
+    decoded = [decoder.decode_line(d) for d in data]
+    return sum(decoded)
 
 
 if __name__ == '__main__':
