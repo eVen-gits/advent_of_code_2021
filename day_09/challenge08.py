@@ -1,16 +1,13 @@
 
 def non_minima_suppression(data):
     m, n = len(data), len(data[0])
-    data_aug = [[0]*n for i in range(m)]
     indices = []
     for j in range(m):
         for i in range(n):
-            is_maxima = is_local_minima(j, i, data)
-            data_aug[j][i] = 1 if is_maxima else 0
-            if is_maxima:
+            if is_local_minima(j, i, data):
                 indices.append((j, i))
 
-    return data_aug, indices
+    return indices
 
 def is_local_minima(j, i, data):
     m, n = len(data), len(data[0])
@@ -28,7 +25,7 @@ def is_local_minima(j, i, data):
     return True
 
 def pt_1(data):
-    _, indices = non_minima_suppression(data)
+    indices = non_minima_suppression(data)
 
     sum_risk = 0
     for j, i in indices:
@@ -36,7 +33,7 @@ def pt_1(data):
     return sum_risk
 
 def pt_2(data):
-    _, indices = non_minima_suppression(data)
+    indices = non_minima_suppression(data)
 
     grown_regions = []
     for local_min in indices:
@@ -44,8 +41,7 @@ def pt_2(data):
         grown_regions.append(expanded)
 
     sizes = sorted([len(region) for region in grown_regions])[-3:]
-    mul = sizes[0] * sizes[1] * sizes[2]
-    return mul
+    return sizes[0] * sizes[1] * sizes[2]
 
 def expand(data, indices):
     m, n = len(data), len(data[0])
