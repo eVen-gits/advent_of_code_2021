@@ -33,20 +33,15 @@ class Decoder:
         7: 8,
     }
 
-    # first key is length of the encoded string
-    # second key is the sum of the set bits in flags
+    # key is the sum of the set bits in flags
     # value is the digit value
     IMPLICIT_MAPPING = {
-        5: {
-            14: 2,
-            8:  3,
-            12: 5,
-        },
-        6: {
-            11:0,
-            15:6,
-            9: 9,
-        },
+        14: 2,
+        8:  3,
+        12: 5,
+        11:0,
+        15:6,
+        9: 9,
     }
 
     def __init__(self):
@@ -106,14 +101,12 @@ class Decoder:
         return False
 
     def smart_map(self, encoded: str) -> bool:
-        strlen = len(encoded)
-
         # calculate flags from encoded string
         flags = self.calculate_flags(encoded)
         xor_sum = sum([sum_bits(self.encoded[x].flags ^ flags) for x in [1, 4, 7]])
 
         try:
-            value = self.IMPLICIT_MAPPING[strlen][xor_sum]
+            value = self.IMPLICIT_MAPPING[xor_sum]
         except KeyError:
             return False
         self.save_mapping(value, encoded)
