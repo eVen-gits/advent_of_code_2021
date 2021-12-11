@@ -1,6 +1,12 @@
 import sys
 import time
 
+def load_data(filename):
+    with open(filename, 'r') as f:
+        data = [i for i in f.readlines()]
+        blen = len(data[0].strip())
+        data = [int(i, 2) for i in data]
+    return data, blen
 
 def get_most_common_bit(data, blen, bit_pos, reverse=False):
     # number of binary inputs
@@ -14,7 +20,7 @@ def get_most_common_bit(data, blen, bit_pos, reverse=False):
         return 0 if ones >= n_inputs / 2 else 1
     return 1 if ones >= n_inputs / 2 else 0
 
-def pt_0(data, blen):
+def pt_1(data, blen):
     # max integer value for blen bits
     maxint = int('1' * blen, 2)
 
@@ -29,7 +35,7 @@ def pt_0(data, blen):
 
     return gamma, epsilon
 
-def pt_1(data, blen):
+def pt_2(data, blen):
     # number of binary inputs
     maxint = int('1' * blen, 2)
 
@@ -57,12 +63,9 @@ def pt_1(data, blen):
     return oxy, co2
 
 if __name__ == '__main__':
-    with open('input.txt', 'r') as f:
-        data = [i for i in f.readlines()]
-        blen = len(data[0].strip())
-        data = [int(i, 2) for i in data]
+    data, blen = load_data('input.txt')
 
-    gamma, epsilon = pt_0(data, blen)
+    gamma, epsilon = pt_1(data, blen)
     print(gamma * epsilon)
-    oxy, co2 = pt_1(data, blen)
+    oxy, co2 = pt_2(data, blen)
     print(oxy * co2)

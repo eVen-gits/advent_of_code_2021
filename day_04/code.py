@@ -1,3 +1,13 @@
+from copy import deepcopy
+
+def load_data(filename):
+    with open(filename, 'r') as f:
+        data = [i for i in f.readlines()]
+    rng = [int(i) for i in data[0].split(',')]
+    del data[0:2]
+
+    return data, rng
+
 class Game:
     def __init__(self, rng):
         self.boards = []
@@ -7,20 +17,21 @@ class Game:
         return all([board.done for board in self.boards])
 
     def play_pt1(self):
-        for num in rng:
+        for num in self.rng:
             for board in self.boards:
                 board.cross(num)
                 if board.check_win():
                     return num * board.sum_remaining()
 
     def play_pt2(self):
-        for num in rng:
+        for num in self.rng:
             for board in self.boards:
                 if not board.done:
                     board.cross(num)
                     if board.check_win():
                         if self.done():
                             return num * board.sum_remaining()
+        return None
 
 class Board:
     def __init__(self, data,):
@@ -82,19 +93,27 @@ class Board:
             out_str += '\n'
         return out_str
 
-
-if __name__ == '__main__':
-    with open('input.txt', 'r') as f:
-        data = [i for i in f.readlines()]
-    rng = map(int, data[0].split(','))
-    del data[0:2]
-
+def pt_1(data, rng):
     game = Game(rng)
     for _ in range((len(data)+1) // 6):
         game.boards.append(Board(data[:6]))
         del data[:6]
 
-    #winner = game.play_pt1()
-    #print(winner)
+    winner = game.play_pt1()
+    return winner
+
+
+def pt_2(data, rng):
+    game = Game(rng)
+    for _ in range((len(data)+1) // 6):
+        game.boards.append(Board(data[:6]))
+        del data[:6]
+
     loser = game.play_pt2()
-    print(loser)
+    return loser
+
+if __name__ == '__main__':
+    data, rng = load_data('input.txt')
+
+    print(pt_1(deepcopy(data), deepcopy(rng)))
+    print(pt_2(deepcopy(data), deepcopy(rng)))

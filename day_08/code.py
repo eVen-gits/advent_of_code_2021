@@ -1,5 +1,22 @@
 from enum import Enum
 
+def load_data(filename):
+    with open(filename, 'r') as f:
+        data = [i.strip() for i in f.readlines()]
+        data_in = []
+        data_out = []
+        for line in data:
+            line_in, line_out = line.split(' | ')
+            data_in.append(line_in.split(' '))
+            data_out.append(line_out.split(' '))
+        data = [data_in + data_out for data_in, data_out in zip(data_in, data_out)]
+    return data
+
+def load_data(filename):
+    with open(filename, 'r') as f:
+        data = []
+    return data
+
 def bin2str(num: int) -> str:
     return '{:07b}'.format(num)[::-1]
 
@@ -170,7 +187,6 @@ DIGITS = {
         print('  {} = {} -> {}'.format(b, bin2str(xor), sum_bits(xor)))
 '''
 
-
 def pt_1(data):
     count = 0
     valid_nsegs = [d.nsegs for d in DIGITS.values() if d.value in [1, 4, 7, 8]]
@@ -185,17 +201,8 @@ def pt_2(data):
     decoded = [decoder.decode_line(d) for d in data]
     return sum(decoded)
 
-
 if __name__ == '__main__':
-    with open('input.txt', 'r') as f:
-        data = [i.strip() for i in f.readlines()]
-        data_in = []
-        data_out = []
-        for line in data:
-            line_in, line_out = line.split(' | ')
-            data_in.append(line_in.split(' '))
-            data_out.append(line_out.split(' '))
-        data = [data_in + data_out for data_in, data_out in zip(data_in, data_out)]
+    data = read_input('input.txt')
 
     print(pt_1(data))
     print(pt_2(data))

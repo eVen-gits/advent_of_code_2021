@@ -1,3 +1,7 @@
+def load_data(filename):
+    with open(filename, 'r') as f:
+        data = [int(i) for i in f.readline().strip().split(',')]
+    return data
 
 def simulate(input_list, days):
     occurances = [0] * 9
@@ -12,13 +16,16 @@ def simulate(input_list, days):
 
     return sum(occurances)
 
-if __name__ == '__main__':
-    with open('input.txt', 'r') as f:
-        data = [int(i) for i in f.readline().strip().split(',')]
+def pt_1(data):
+    return simulate(data, 80)
 
-    population = simulate(data, 80)
-    print(population)
-    population = simulate(data, 256)
-    print(population)
+def pt_2(data):
+    return simulate(data, 256)
+
+if __name__ == '__main__':
+    data = load_data('input.txt')
+
+    print(pt_1(data))
+    print(pt_2(data))
 
 

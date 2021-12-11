@@ -1,5 +1,11 @@
 from enum import Enum
 
+def load_data(filename):
+    with open(filename, 'r') as f:
+        data = [i.split(' ') for i in f.readlines()]
+        data = [(Command[d[0].upper()], int(d[1])) for d in data]
+    return data
+
 class Command(Enum):
     FORWARD = 1
     DOWN = 2
@@ -49,11 +55,17 @@ class State:
     def __repr__(self):
         return f"{self.position} {self.depth}"
 
+def pt_1(data):
+    state = State()
+    return State().process(data, state.action_pt1)
+
+def pt_2(data):
+    state = State()
+    return state.process(data, state.action_pt0)
+
 if __name__ == '__main__':
-    with open('input.txt', 'r') as f:
-            data = [i.split(' ') for i in f.readlines()]
-            data = [(Command[d[0].upper()], int(d[1])) for d in data]
+    data = load_data('input.txt')
 
     state = State()
-    print(state.process(data, state.action_pt0))
-    print(state.process(data, state.action_pt1))
+    print(pt_1(data))
+    print(pt_2(data))

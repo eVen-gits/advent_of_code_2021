@@ -1,3 +1,12 @@
+def load_data(filename):
+    with open(filename, 'r') as f:
+        buffer = [i for i in f.readlines()]
+        data = [
+            [int(i) for i in line.replace(' -> ', ',').strip().split(',')]
+            for line in buffer
+        ]
+    return data
+
 class Line:
     def __init__(self, x1, y1, x2, y2):
         self.x1 = x1
@@ -98,14 +107,19 @@ class Terrain:
             out_str += '\n'
         return out_str
 
-if __name__ == '__main__':
-    with open('input.txt', 'r') as f:
-        buffer = [i for i in f.readlines()]
-        data = [
-            [int(i) for i in line.replace(' -> ', ',').strip().split(',')]
-            for line in buffer
-        ]
+def pt_1(data):
     terrain = Terrain()
     terrain.add_lines(data)
-    #terrain.discard_diagonal_lines()
-    print(len(terrain.intersections))
+    terrain.discard_diagonal_lines()
+    return len(terrain.intersections)
+
+def pt_2(data):
+    terrain = Terrain()
+    terrain.add_lines(data)
+    return len(terrain.intersections)
+
+if __name__ == '__main__':
+    data = load_data('input.txt')
+
+    print(pt_1(data))
+    print(pt_2(data))

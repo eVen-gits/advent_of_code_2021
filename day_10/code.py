@@ -28,6 +28,11 @@ OPENING = [
 
 DEBUG = False
 
+def load_data(filename):
+    with open(filename, 'r') as f:
+        data = [i.strip() for i in f.readlines()]
+    return data
+
 class IncompleteLineException(Exception):
     pass
 
@@ -73,9 +78,9 @@ def pt_1(data):
             if errors:
                 score += sum(ERROR_SCORES[f] for e, f in errors)
                 e, f = errors[0]
-                print('{} - Expected {}, but found {} instead.'.format(line, e, f))
+                if DEBUG: print('{} - Expected {}, but found {} instead.'.format(line, e, f))
         except IncompleteLineException as e:
-            print(e)
+            if DEBUG: print(e)
     return score
 
 def pt_2(data):
@@ -94,17 +99,15 @@ def pt_2(data):
                     if DEBUG: print('Adding', CLOSING[e.args[0]])
                     fix += CLOSING[e.args[0]]
 
-            print('{} - Complete by adding {}'.format(line, fix), end='')
+            if DEBUG: print('{} - Complete by adding {}'.format(line, fix), end='')
             for correciton in fix:
                 score = score * 5 + FIX_SCORES[correciton]
             scores.append(score)
-            print(' - {} total points.'.format(score))
+            if DEBUG: print(' - {} total points.'.format(score))
 
     return sorted(scores)[len(scores)//2]
 
-
 if __name__ == '__main__':
-    with open('input.txt', 'r') as f:
-        data = [i.strip() for i in f.readlines()]
+    data = load_data('input.txt')
     print(pt_1(data))
     print(pt_2(data))

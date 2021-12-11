@@ -13,6 +13,11 @@ CHECK_DIRECTION = [
 
 DEBUG = False
 
+def load_data(filename):
+    with open(filename, 'r') as f:
+        data = [[int(i) for i in line.strip()] for line in f.readlines()]
+    return data
+
 def print_data(data):
     for j in range(10):
         print(''.join(map(str, data[j])).replace('0', '*'))
@@ -31,7 +36,6 @@ def step1(data):
         for i in range(10):
             data[j][i] += 1
 
-
 def step2(data, indices):
     for j, i in indices:
         for dj, di in CHECK_DIRECTION:
@@ -42,10 +46,10 @@ def step2(data, indices):
                 if data[j+dj][i+di] != 0:
                     data[j+dj][i+di] += 1
 
-def pt_1(data, days):
+def pt_1(data):
     flashes = 0
     if DEBUG: print_data(data)
-    for i in range(days):
+    for i in range(100):
         step1(data)
         indices = check_flashes(data)
         while indices:
@@ -77,7 +81,6 @@ def pt_2(data):
             return day
 
 if __name__ == '__main__':
-    with open('input.txt', 'r') as f:
-        data = [[int(i) for i in line.strip()] for line in f.readlines()]
-    print(pt_1(deepcopy(data), 100))
+    data = load_data('input.txt')
+    print(pt_1(deepcopy(data)))
     print(pt_2(deepcopy(data)))

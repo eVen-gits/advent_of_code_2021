@@ -1,3 +1,7 @@
+def load_data(filename):
+    with open(filename, 'r') as f:
+        data = [[int(d) for d in i.strip()] for i in f.readlines()]
+    return data
 
 def non_minima_suppression(data):
     m, n = len(data), len(data[0])
@@ -60,9 +64,7 @@ def expand(data, indices):
         return set(indices).union(expand(data, new_indices))
     return set(indices)
 
-
 if __name__ == '__main__':
-    with open('input.txt', 'r') as f:
-        data = [[int(d) for d in i.strip()] for i in f.readlines()]
+    data = load_data('input.txt')
     print(pt_1(data))
     print(pt_2(data))
