@@ -47,24 +47,23 @@ def fold(dots, action):
         print_grid(dots, m, n)
 
     if faxis == Fold.X:
-        m2, n2 = m, min(fpos-1, n-fpos-1)
+        m2, n2 = m, max(fpos-1, n-fpos-1)
     else:
         m2, n2 = max(fpos-1, m-fpos-1), n
 
     new_dots = set()
     for dot in dots:
         if faxis == Fold.X:
-            if n2 > fpos: #TODO: Extending fold
-                new_dots.add((dot[0]-fpos-1, dot[1]))
+            if dot[0] > fpos:
+                new_dots.add((n2 - (dot[0] - fpos - 1), dot[1]))
+            elif n2 > fpos:
+                new_dots.add((dot[0] + n2 - fpos, dot[1]))
             else:
-                if dot[0] < fpos:
-                    new_dots.add((fpos-dot[0]-1, dot[1]))
-                else:
-                    new_dots.add((dot[0]-fpos-1, dot[1]))
+                new_dots.add(dot)
         elif faxis == Fold.Y:
             if dot[1] > fpos:
-                new_dots.add((dot[0], m2 - (dot[1] - fpos-1)))
-            elif m2 > fpos: #TODO: extending fold
+                new_dots.add((dot[0], m2 - (dot[1] - fpos - 1)))
+            elif m2 > fpos:
                 new_dots.add((dot[0], dot[1] + m2 - fpos))
             else:
                 new_dots.add(dot)
@@ -73,7 +72,6 @@ def fold(dots, action):
         print('Folding along {}={}'.format(faxis.name, fpos))
         print_grid(new_dots, m2, n2)
     return new_dots
-
 
 def pt_1(dots, folds):
     for action in [folds[0]]:
