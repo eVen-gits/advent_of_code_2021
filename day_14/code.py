@@ -1,4 +1,3 @@
-from tqdm import tqdm
 DEBUG = False
 
 def load_data(filename):
