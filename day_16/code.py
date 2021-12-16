@@ -46,8 +46,9 @@ class Packet:
             packet = LiteralPacket(version)
         else:
             packet = OperatorPacket(version)
-        print(packet_type.name, version)
+        #print(packet_type.name, version)
         packet.parse(data)
+        packet._data = data[:packet.size]
         print(packet)
         return packet
 
@@ -143,8 +144,9 @@ class OperatorPacket(Packet):
         )
 
     def __repr__(self):
-        return '<OperatorPacket version={} type={} packets={}> {}\n\t{}'.format(
-            self.version, self.operator_type.name, len(self.packets), self.data_str,
+        return '<OperatorPacket version={} type={} packets={} size={}> {}\n\t{}'.format(
+            self.version, self.operator_type.name, len(self.packets), self.size,
+            self.data_str,
             '\n\t'.join([str(p) for p in self.packets])
         )
 
