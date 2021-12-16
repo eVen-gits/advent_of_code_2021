@@ -87,8 +87,9 @@ def pt_2(dots, folds):
 
     m, n = max(Ys), max(Xs)
 
-    print()
-    print_grid(dots, m, n)
+    if DEBUG:
+        print()
+        print_grid(dots, m, n)
     return None
 
 if __name__ == '__main__':

@@ -3,7 +3,7 @@ from time import time
 from tqdm import tqdm
 from copy import deepcopy
 
-SAMPLE_RUNS = 100
+SAMPLE_RUNS = 1
 
 if __name__ == '__main__':
     avg_times = []
