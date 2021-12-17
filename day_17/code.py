@@ -112,7 +112,24 @@ def calc_x(dist):
     D = sqrt(1/4 + 2*dist)
     x1 = -0.5 + D
     x2 = -0.5 - D
-    return int(max(x1, x2))
+    # apparently, this is faster than max()
+    return int(x1 if x1 > x2 else x2)
+
+def calc_valid_speeds(limits):
+    xmin, xmax, *_ = limits
+    vxmin = calc_x(xmin)
+    speeds = []
+    for v0 in range(vxmin, xmax):
+        px = 0
+        vx = v0
+        while px < xmax+1:
+            px += vx
+            vx -= 1
+            if vx < 1:
+                break
+            if px in range(xmin, xmax+1):
+                speeds.append(vx)
+    return set(speeds)
 
 def pt_1(data) -> int:
     xmin, xmax, ymin, ymax = data
@@ -126,7 +143,10 @@ def pt_2(data) -> int:
     # or shooting directly (straight)
 
     # dy and dy are connected - have to figure out which one should be considered first
-    
+
+    #TODO: This doesnt seem to be working properly
+    #x_speeds = calc_valid_speeds(data)
+
     vals = [
         test(dx, dy, data)
         for dx in range(x_range[0], xmax+1)
@@ -135,6 +155,6 @@ def pt_2(data) -> int:
     return sum(vals)
 
 if __name__ == '__main__':
-    data = load_data('input.txt')
+    data = load_data('demo.txt')
     print(pt_1(data))
     print(pt_2(data))
